@@ -9,7 +9,9 @@ import java.awt.Color;
 import com.toedter.calendar.JDateChooser;
 
 import controller.HuespedController;
+import controller.ReservaController;
 import modelo.Huesped;
+import modelo.Reserva;
 
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
@@ -46,6 +48,7 @@ public class RegistroHuesped extends JFrame {
 	int xMouse, yMouse;
 
 	HuespedController huespedController = new HuespedController();
+	ReservaController reservaController = new ReservaController();
 	private int idFinal;
 
 	/**
@@ -64,6 +67,7 @@ public class RegistroHuesped extends JFrame {
 	public RegistroHuesped(int idReserva) {
 		this.idFinal = idReserva;
 		
+		Reserva reserva = reservaController.buscar(idReserva);
 		
 
 		setIconImage(
@@ -239,6 +243,9 @@ public class RegistroHuesped extends JFrame {
 
 		System.out.println("estamos trabajando con le reserva N:" +   " En linea 240");
 
+		
+		String valor = String.valueOf(reserva.getId());
+		txtNreserva.setText(valor);
 		contentPane.add(txtNreserva);
 		txtNreserva.setEditable(false);
 		
