@@ -239,15 +239,13 @@ public class RegistroHuesped extends JFrame {
 		txtNreserva.setBackground(Color.WHITE);
 		txtNreserva.setBorder(javax.swing.BorderFactory.createEmptyBorder());
 
-		System.out.println("estamos trabajando con le reserva N:" + idReserva + " En linea 240");
 
-		System.out.println("estamos trabajando con le reserva N:" +   " En linea 240");
 
 		
 		String valor = String.valueOf(reserva.getId());
 		txtNreserva.setText(valor);
 		contentPane.add(txtNreserva);
-		txtNreserva.setEditable(false);
+		txtNreserva.setEditable(true);
 		
 		
 		

@@ -14,8 +14,8 @@ public class pruebasHuesped {
 		ConnectionFactory fac = new ConnectionFactory();
 		Connection connect = fac.getConnection();
 		HuespedDao dao1 = new HuespedDao(connect);
-		Date date = java.sql.Date.valueOf("1998-05-12");
-		Huesped huesped = new Huesped("Gabriel", "Gonzalez", date, "Argentino", "25",1);
+		Date date = java.sql.Date.valueOf("2000-07-25");
+		Huesped huesped = new Huesped("Ricardo", "gomez", date, "Argentino", "25",1);
 		//dao1.guardar(huesped);
 		
 		List<Huesped> huespedes =dao1.listar();
