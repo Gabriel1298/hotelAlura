@@ -46,29 +46,26 @@ public class RegistroHuesped extends JFrame {
 	private JLabel labelAtras;
 	private JLabel lblNewLabel_1; 
 	int xMouse, yMouse;
-
+	private int idReserva;
 	HuespedController huespedController = new HuespedController();
-	ReservaController reservaController = new ReservaController();
-	private int idFinal;
+
+	
+
 
 	/**
 	 * Launch the application.
 	 */
 	
-	/*public static void main(String[] args) { EventQueue.invokeLater(new
-	 Runnable() { public void run() { try { RegistroHuesped frame = new
-	 RegistroHuesped(0); frame.setVisible(true); } catch (Exception e) {
-	e.printStackTrace(); } } }); }
-	 
-*/
+	//public static void main(String[] args) { EventQueue.invokeLater(new
+	// Runnable() { public void run() { try { RegistroHuesped frame = new
+	// RegistroHuesped(0); frame.setVisible(true); } catch (Exception e) {
+	//e.printStackTrace(); } } }); }
+
 	/**
 	 * Create the frame.
 	 */
 	public RegistroHuesped(int idReserva) {
-		this.idFinal = idReserva;
-		
-		Reserva reserva = reservaController.buscar(idReserva);
-		
+		this.idReserva = idReserva;
 
 		setIconImage(
 				Toolkit.getDefaultToolkit().getImage(RegistroHuesped.class.getResource("/imagenes/lOGO-50PX.png")));
@@ -238,15 +235,10 @@ public class RegistroHuesped extends JFrame {
 		txtNreserva.setColumns(10);
 		txtNreserva.setBackground(Color.WHITE);
 		txtNreserva.setBorder(javax.swing.BorderFactory.createEmptyBorder());
-
-
-
-		
-		String valor = String.valueOf(reserva.getId());
-		txtNreserva.setText(valor);
+		txtNreserva.setText(String.valueOf(idReserva));
+		txtNreserva.setEditable(false);
 		contentPane.add(txtNreserva);
-		txtNreserva.setEditable(true);
-		
+
 		
 		
 
@@ -370,8 +362,7 @@ public class RegistroHuesped extends JFrame {
 		labelExit.setHorizontalAlignment(SwingConstants.CENTER);
 		labelExit.setForeground(SystemColor.black);
 		labelExit.setFont(new Font("Roboto", Font.PLAIN, 18));
-		
-		
+
 	}
 
 	private void guardarHuesped() {
@@ -382,7 +373,7 @@ public class RegistroHuesped extends JFrame {
 			System.out.println(valor);
 			System.out.println("dentro de guardarHuesped - idReserva:" + valor);
 			Huesped huesped = new Huesped(txtNombre.getText(), txtApellido.getText(), fechaN,
-					txtNacionalidad.getSelectedItem().toString(), txtTelefono.getText(), this.idFinal);
+					txtNacionalidad.getSelectedItem().toString(), txtTelefono.getText(), this.idReserva);
 			this.huespedController.guardar(huesped);
 			
 			Exito exito = new Exito();

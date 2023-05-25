@@ -22,6 +22,7 @@ import java.text.Format;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -34,12 +35,16 @@ import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 import controller.ReservaController;
 import java.sql.Date;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 @SuppressWarnings("serial")
 public class ReservasView extends JFrame {
 	
-	private ReservaController reservaController;
 	
+
+	private ReservaController reservaController;
+
 	private JPanel contentPane;
 	public static JTextField txtValor;
 	public static JDateChooser txtFechaEntrada;
@@ -69,9 +74,9 @@ public class ReservasView extends JFrame {
 	 * Create the frame.
 	 */
 	public ReservasView() {
-		this.reservaController = new ReservaController();
 		
-		//super("Reserva");
+		this.reservaController = new ReservaController();
+
 		setIconImage(Toolkit.getDefaultToolkit().getImage(ReservasView.class.getResource("/imagenes/aH-40px.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 910, 560);
@@ -199,6 +204,7 @@ public class ReservasView extends JFrame {
 		labelExit.setHorizontalAlignment(SwingConstants.CENTER);
 		labelExit.setFont(new Font("Roboto", Font.PLAIN, 18));
 		
+		
 		JPanel header = new JPanel();
 		header.setBounds(0, 0, 910, 36);
 		header.addMouseMotionListener(new MouseMotionAdapter() {
@@ -257,6 +263,7 @@ public class ReservasView extends JFrame {
 		
 		//Campos que guardaremos en la base de datos
 		txtFechaEntrada = new JDateChooser();
+		
 		txtFechaEntrada.getCalendarButton().setBackground(SystemColor.textHighlight);
 		txtFechaEntrada.getCalendarButton().setIcon(new ImageIcon(ReservasView.class.getResource("/imagenes/icon-reservas.png")));
 		txtFechaEntrada.getCalendarButton().setFont(new Font("Roboto", Font.PLAIN, 12));
@@ -268,6 +275,21 @@ public class ReservasView extends JFrame {
 		txtFechaEntrada.setFont(new Font("Roboto", Font.PLAIN, 18));
 		panel.add(txtFechaEntrada);
 
+		txtFechaEntrada.addPropertyChangeListener(new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent evt) {
+				
+
+				if(desfaceFechaActual(txtFechaEntrada)== -1) {
+					
+				}
+				if(desfaceFechaActual(txtFechaSalida) == 1  && desfaceFechaActual(txtFechaEntrada) == 1) {
+					calcular(txtFechaEntrada, txtFechaSalida);
+				}
+
+			}
+		});
+
+		
 		txtFechaSalida = new JDateChooser();
 		txtFechaSalida.getCalendarButton().setIcon(new ImageIcon(ReservasView.class.getResource("/imagenes/icon-reservas.png")));
 		txtFechaSalida.getCalendarButton().setFont(new Font("Roboto", Font.PLAIN, 11));
@@ -275,21 +297,56 @@ public class ReservasView extends JFrame {
 		txtFechaSalida.getCalendarButton().setBounds(267, 1, 21, 31);
 		txtFechaSalida.setBackground(Color.WHITE);
 		txtFechaSalida.setFont(new Font("Roboto", Font.PLAIN, 18));
-		txtFechaSalida.addPropertyChangeListener(new PropertyChangeListener() {
-			public void propertyChange(PropertyChangeEvent evt) {
-				//Activa el evento, después del usuario seleccionar las fechas se debe calcular el valor de la reserva
-			}
-		});
 		txtFechaSalida.setDateFormatString("yyyy-MM-dd");
 		txtFechaSalida.getCalendarButton().setBackground(SystemColor.textHighlight);
 		txtFechaSalida.setBorder(new LineBorder(new Color(255, 255, 255), 0));
 		panel.add(txtFechaSalida);
-		
 		txtFechaSalida.addPropertyChangeListener(new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent evt) {
-				calcular(txtFechaEntrada, txtFechaSalida);
+				if(desfaceFechaActual(txtFechaSalida)== -1 ) {
+					JOptionPane.showMessageDialog(null,"La fecha de salida no puede ser anterior a la fecha actual");
+					txtValor.setText("$"+0);
+				}
+				if(desfaceFechaActual(txtFechaSalida) == 1  && txtFechaEntrada.getDate() != null) {
+
+					calcular(txtFechaEntrada, txtFechaSalida);
+				}
+				
 			}
 		});
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		
 		
@@ -299,22 +356,15 @@ public class ReservasView extends JFrame {
 		txtValor.setHorizontalAlignment(SwingConstants.CENTER);
 		txtValor.setForeground(Color.BLACK);
 		txtValor.setBounds(78, 328, 131, 33);
+		//txtValor.setText("$0");
 		txtValor.setEditable(false);
 		txtValor.setFont(new Font("Roboto Black", Font.BOLD, 17));
 		txtValor.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+		txtValor.setText("$0");
 		panel.add(txtValor);
 		txtValor.setColumns(10);
 		
-	
-		
-	
-		
 
-		
-		
-		
-		
-		
 
 		txtFormaPago = new JComboBox();
 		txtFormaPago.setBounds(68, 417, 289, 38);
@@ -325,15 +375,23 @@ public class ReservasView extends JFrame {
 		panel.add(txtFormaPago);
 
 		JPanel btnsiguiente = new JPanel();
+		
+
+		
 		btnsiguiente.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if (ReservasView.txtFechaEntrada.getDate() != null && ReservasView.txtFechaSalida.getDate() != null) {		
-					RegistroHuesped registro = new RegistroHuesped(0);
-					registro.setVisible(true);
-				} else {
-					JOptionPane.showMessageDialog(null, "Debes llenar todos los campos.");
+				int valordelcuadro= Integer.parseInt(txtValor.getText().substring(1));
+				if((txtFechaEntrada.getDate() != null && txtFechaSalida.getDate() != null )  && (valordelcuadro != 0)) {
+
+					guardarReserva();
+				}else if((txtFechaEntrada.getDate() != null && txtFechaSalida.getDate() != null )) {
+					
+					JOptionPane.showMessageDialog(null, "Debes elegir fechas validas");
+				}else {
+					JOptionPane.showMessageDialog(null, "Debes completar todos los campos");
 				}
+				
 			}						
 		});
 		btnsiguiente.setLayout(null);
@@ -342,63 +400,102 @@ public class ReservasView extends JFrame {
 		panel.add(btnsiguiente);
 		btnsiguiente.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 		btnsiguiente.add(lblSiguiente);
-		btnsiguiente.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if((txtFechaEntrada.getDate() != null && txtFechaSalida.getDate() != null)) {
-					guardarReserva();
-				}else {
-					JOptionPane.showMessageDialog(null, "Debes llenar todos los campos");
-				}
-			}
-		});
+
 	}
 	
 	
-		private void calcular(JDateChooser fechaEntrada, JDateChooser fechaSalida) {
-			if(fechaEntrada.getDate() != null && fechaSalida.getDate() !=null) {
-				Calendar inicio = fechaEntrada.getCalendar();
-				Calendar fin = fechaSalida.getCalendar();
-				int dias = -1; 
-				int diaria = 1500;
-				int valor;
-				
-				while(inicio.before(fin)||inicio.equals(fin)) {
-					dias++;
-					inicio.add(Calendar.DATE,1);
-				}
-				valor = dias * diaria;
-				txtValor.setText("$" + valor);
 
+	private int desfaceFechaActual(JDateChooser fechaEntrada) {
+
+		if (fechaEntrada.getDate() != null) {
+			int anio = (int) fechaEntrada.getDate().getYear() + 1900;
+			int mes = (int) fechaEntrada.getDate().getMonth();
+			int dia = (int) fechaEntrada.getDate().getDate();
+			Date entrada = new Date(anio, mes, dia);
+			Date actualDate = getFechaActual();
+			if ((entrada.compareTo(actualDate)) == -1) {
+
+				return -1;
 			}
-		};
+		}
+		return 1;
+	}
+
+
+
+
+	private Date getFechaActual() {
+		Calendar actual = new GregorianCalendar();
+		int anioNuevo = actual.get(Calendar.YEAR);
+		int mesActual = actual.get(Calendar.MONTH);
+		int diaActual = actual.get(Calendar.DATE);
+		return new Date(anioNuevo, mesActual, diaActual);
+	}
+
+
+
+	private void calcular(JDateChooser fechaEntrada, JDateChooser fechaSalida) {
+
+		int entrada = this.desfaceFechaActual(txtFechaEntrada);
+		int salida = this.desfaceFechaActual(txtFechaSalida); //txtFechaSalida
+
+		if ((fechaEntrada.getDate() != null && fechaSalida.getDate() != null) && entrada == 1 && salida == 1) {
+			Calendar inicio = fechaEntrada.getCalendar();
+			Calendar fin = fechaSalida.getCalendar();
+
+			int dias = -1;
+			int diaria = 1500;
+			int valor =1500;
+
+			while (inicio.before(fin) || inicio.equals(fin)) {
+				dias++;
+				inicio.add(Calendar.DATE, 1);
+			}
+			valor = dias * diaria;
+			
 		
+			
+	
+		
+			
+		//	Date entradaPrueba = new Date(inicio.getInstance(anio, mes,dia));
+			
+	
+			txtValor.setText("$" + valor);
+
+
+		}
+
+	};
 
 	private void guardarReserva() {
-		
-		Date FechaE =java.sql.Date.valueOf(((JTextField)txtFechaEntrada.getDateEditor().getUiComponent()).getText());
-		Date FechaS =java.sql.Date.valueOf(((JTextField)txtFechaSalida.getDateEditor().getUiComponent()).getText());
+
+		Date FechaE = java.sql.Date.valueOf(((JTextField) txtFechaEntrada.getDateEditor().getUiComponent()).getText());
+		Date FechaS = java.sql.Date.valueOf(((JTextField) txtFechaSalida.getDateEditor().getUiComponent()).getText());
 		LocalDate entrada = FechaE.toLocalDate();
 		LocalDate salida = FechaS.toLocalDate();
 		String formaPago = txtFormaPago.getSelectedItem().toString();
-		
-		Reserva nuevaReserva = new Reserva(FechaE,FechaS,txtValor.getText(),formaPago);
-		
+
+		Reserva nuevaReserva = new Reserva(FechaE, FechaS, txtValor.getText(), formaPago);
+
 		reservaController.guardar(nuevaReserva);
-		System.out.println(nuevaReserva.getId());
-		RegistroHuesped registro = new RegistroHuesped(nuevaReserva.getId());
+		if(txtValor.getText() != "$0") {
+			RegistroHuesped registro = new RegistroHuesped(nuevaReserva.getId());
+			registro.setVisible(true);
+		}
 		
 	}
-		
-	//Código que permite mover la ventana por la pantalla según la posición de "x" y "y"	
-	 private void headerMousePressed(java.awt.event.MouseEvent evt) {
-	        xMouse = evt.getX();
-	        yMouse = evt.getY();
-	    }
 
-	    private void headerMouseDragged(java.awt.event.MouseEvent evt) {
-	        int x = evt.getXOnScreen();
-	        int y = evt.getYOnScreen();
-	        this.setLocation(x - xMouse, y - yMouse);
-}
+	// Código que permite mover la ventana por la pantalla según la posición de "x"
+	// y "y"
+	private void headerMousePressed(java.awt.event.MouseEvent evt) {
+		xMouse = evt.getX();
+		yMouse = evt.getY();
+	}
+
+	private void headerMouseDragged(java.awt.event.MouseEvent evt) {
+		int x = evt.getXOnScreen();
+		int y = evt.getYOnScreen();
+		this.setLocation(x - xMouse, y - yMouse);
+	}
 }

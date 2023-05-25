@@ -21,11 +21,11 @@ public class pruebasReserva {
 		Reserva reserva = new Reserva(fechaE,fechaS,"6000","tarjeta débito");
 		
 		ReservaController controller = new ReservaController();
-		controller.guardar(reserva);
 		
-		//List<Reserva> re = controller.listarPorCliente(1);
-
-		System.out.println("fin");
+		Reserva reserva2 = controller.buscar(28);
+		
+		System.out.println(reserva2.getId());
+		System.out.println(reserva2.getFormaPago());
 	}
 
 }

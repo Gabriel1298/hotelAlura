@@ -61,22 +61,20 @@ public class ReservaDao {
 	}
 	
 	public Reserva buscar(int id) {
-		Reserva valor = new Reserva();
-		try {
-			PreparedStatement state = this.connection.prepareStatement("SELECT * FROM reservas WHERE id=?");
+		String sql = "SELECT * FROM reservas WHERE id=?";
+		try (PreparedStatement state = this.connection.prepareStatement(sql);){
 			state.setInt(1, id);
 			ResultSet result = state.executeQuery();
 			this.connection.commit();
 			if(result.next()) {
-				return valor = new Reserva(result.getInt("id"),result.getDate("fechaE"),result.getDate("fechaS"),result.getString("valor"),result.getString("formapago"));
-			
+				return  new Reserva(result.getInt("id"),result.getDate("fechaE"),result.getDate("fechaS"),result.getString("valor"),result.getString("formapago"));
 			}
 			System.out.println("si");
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
-		return valor;
 		
+		return null;
 	}
 	
 	public void eliminar(int id){

@@ -26,6 +26,7 @@ import javax.swing.JOptionPane;
 
 import java.awt.Font;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JTabbedPane;
@@ -274,12 +275,16 @@ public class Busqueda extends JFrame {
 					vaciarTabla(tbHuespedes);
 					vaciarTabla(tbReservas);
 					String str = txtBuscar.getText();
-					int esNum = Integer.valueOf(str);
-					llenarHuespedes(buscarHuespedPorIdReserva(esNum));
+					int idReserva = Integer.valueOf(str);
+					llenarHuespedes(buscarHuespedPorIdReserva(idReserva));
 					
 					
+					List<Reserva> reserva = new ArrayList<Reserva>();
+					reserva.add(reservaController.buscar(idReserva));
+					llenarReservas(reserva);
 					
-					llenarReservas();
+				
+
 				}
 				
 				if(txtBuscar.getText().isEmpty()) {
